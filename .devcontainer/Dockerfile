@@ -23,7 +23,9 @@ RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -SsL https://downloads.gauge.org/stable | sh \
     && su vscode -c "gauge install java" \
-    && su vscode -c "gauge install html-report"
+    && su vscode -c "gauge install html-report" \
+# Install Heroku CLI
+    && curl https://cli-assets.heroku.com/install.sh | sh
 
 # [Optional] Uncomment this line to install global node packages.
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g @stoplight/prism-cli" 2>&1
