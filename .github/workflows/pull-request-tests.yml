@@ -1,0 +1,63 @@
+---
+
+name: FTs on pull requests
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+    branches:
+      - master
+
+jobs:
+
+  functional-tests:
+    name: Pull request FTs
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install Prism
+        run: npm install -g @stoplight/prism-cli
+
+      - name: Install Gauge
+        uses: getgauge/setup-gauge@master
+        with:
+          gauge-version: master
+          gauge-plugins: js, html-report, screenshot
+
+      - name: Verify Review App status
+        id: review_app_status
+        uses: niteoweb/reviewapps-deploy-status@v1.4.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check out contract repo
+        uses: actions/checkout@v2
+        with:
+          repository: agilepathway/available-pets-consumer-contract
+
+      - name: Start Prism in validation proxy mode
+        run: prism proxy openapi.yaml ${{ steps.review_app_status.outputs.review_app_url }}/v2 --errors &
+
+      - name: Run contract specs against Prism validation proxy
+        env:
+          OPENAPI_HOST: http://127.0.0.1:4010
+        run: gauge run specs
+
+      - name: Run contract specs against provider
+        # It is not sufficient to just run the specs using Prism as a validation proxy, as Prism does not error
+        # when the server returns a 501 not implemented response (see https://github.com/stoplightio/prism/issues/1963)
+        env:
+          OPENAPI_HOST: ${{ steps.review_app_status.outputs.review_app_url }}/v2
+        run: gauge run specs
+
+      - name: Upload Gauge test report
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: gauge-html-report
+          path: reports/html-report/
