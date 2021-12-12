@@ -8,7 +8,19 @@ on:  # yamllint disable-line rule:truthy
 
 jobs:
 
+  deploy-to-post-merge:
+    runs-on: ubuntu-20.04
+    environment: post-merge
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+
   deploy-to-pre-production:
+    needs: deploy-to-post-merge
     runs-on: ubuntu-20.04
     environment: pre-production
     steps:
