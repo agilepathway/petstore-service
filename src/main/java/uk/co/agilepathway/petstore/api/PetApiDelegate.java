@@ -1,7 +1,9 @@
 package uk.co.agilepathway.petstore.api;
 
+import uk.co.agilepathway.petstore.model.Category;
 import uk.co.agilepathway.petstore.model.ModelApiResponse;
 import uk.co.agilepathway.petstore.model.Pet;
+import uk.co.agilepathway.petstore.model.Pet.StatusEnum;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -75,7 +78,14 @@ public interface PetApiDelegate {
                 }
             }
         });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        Pet doggie = new Pet().name("doggie")
+                .status(StatusEnum.fromValue(status.get(0)))
+                .id(1L)
+                .tags(Collections.<uk.co.agilepathway.petstore.model.Tag>emptyList())
+                .category(new Category().id(1L).name("A category"))
+                .photoUrls(Collections.<String>emptyList());
+        List<Pet> pets = Collections.singletonList(doggie);
+        return new ResponseEntity<List<Pet>>(pets, HttpStatus.OK);
 
     }
 
