@@ -6,3 +6,6 @@ repos demonstrates [consumer-driven contract testing](https://martinfowler.com/a
 
 The microservice uses an 
 [OpenAPI design-first approach](https://apisyouwonthate.com/blog/api-design-first-vs-code-first).
+
+As this repository exists to demonstrate _consumer_-driven contract testing, a good place to start is the
+[web app consumer's README](https://github.com/agilepathway/available-pets-consumer), which describes the workflow.
