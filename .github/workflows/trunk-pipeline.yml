@@ -59,7 +59,7 @@ jobs:
 
       - name: Set contract repo commit output var
         id: set-contract-commit-output-var
-        path: './consumer'
+        working-directory: './consumer'
         run: |
           CONSUMER_COMMIT=${{ steps.set-consumer-production-commit-output-var.outputs.commit }}
           CONTRACT_TAG=$(git describe --match "available-pets-consumer-contract*" --tags ${CONSUMER_COMMIT})
