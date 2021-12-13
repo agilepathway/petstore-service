@@ -28,7 +28,7 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ephemeral-petstore-service
+          heroku_app_name: ephemeral-petstore-service2
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
 
   can-i-deploy:
@@ -87,7 +87,7 @@ jobs:
 
       - name: Start Prism in validation proxy mode
         working-directory: ./contract
-        run: prism proxy openapi.yaml https://ephemeral-petstore-service.herokuapp.com/v2 --errors &
+        run: prism proxy openapi.yaml https://ephemeral-petstore-service2.herokuapp.com/v2 --errors &
       - name: Check that the provider satisfies the contract
         env:
           OPENAPI_HOST: http://127.0.0.1:4010
