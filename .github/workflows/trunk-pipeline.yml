@@ -40,9 +40,12 @@ jobs:
     # consumer about which of the consumer or the provider should be amended.
     runs-on: ubuntu-20.04
     steps:
-      - name: Check out code
+
+      - name: Check out consumer repo
         uses: actions/checkout@v2
         with:
+          repository: agilepathway/available-pets-consumer
+          path: './consumer'
           fetch-depth: '0'
 
       - name: Set consumer repo production commit output var
@@ -56,6 +59,7 @@ jobs:
 
       - name: Set contract repo commit output var
         id: set-contract-commit-output-var
+        path: './consumer'
         run: |
           CONSUMER_COMMIT=${{ steps.set-consumer-production-commit-output-var.outputs.commit }}
           CONTRACT_TAG=$(git describe --match "available-pets-consumer-contract*" --tags ${CONSUMER_COMMIT})
