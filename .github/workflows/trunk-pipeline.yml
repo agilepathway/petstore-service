@@ -19,8 +19,90 @@ jobs:
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
 
-  deploy-to-pre-production:
+  deploy-ephemeral-provider-for-can-i-deploy-check:
     needs: deploy-to-post-merge
+    runs-on: ubuntu-20.04
+    environment: can-i-deploy
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ephemeral-petstore-service
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+
+  can-i-deploy:
+    needs: deploy-ephemeral-provider-for-can-i-deploy-check
+    # Verify that the provider satisfies the contract for the specific consumer commit
+    # that is currently in the integrated environment that we want to deploy to.
+    # If the contract is not satisfied by the provider then the pipeline stops and we do
+    # not deploy to the integrated environment.  The provider would then discuss with the
+    # consumer about which of the consumer or the provider should be amended.
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+
+      - name: Set consumer repo production commit output var
+        id: set-consumer-production-commit-output-var
+        # HEROKU_SLUG_COMMIT is available via https://devcenter.heroku.com/articles/dyno-metadata
+        run: |
+          COMMIT=$(heroku config:get --app pets-consumer HEROKU_SLUG_COMMIT)
+          echo "::set-output name=commit::${COMMIT}"
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+      - name: Set contract repo commit output var
+        id: set-contract-commit-output-var
+        run: |
+          CONSUMER_COMMIT=${{ steps.set-consumer-production-commit-output-var.outputs.commit }}
+          CONTRACT_TAG=$(git describe --match "available-pets-consumer-contract*" --tags ${CONSUMER_COMMIT})
+          TMP=${CONTRACT_TAG#*available-pets-consumer-contract-}   # remove prefix ending in "_"
+          CONTRACT_COMMIT=${TMP%%-*} # remove suffix starting with "-"
+          echo "::set-output name=contract-commit::${CONTRACT_COMMIT}"
+
+      - name: Check out contract repo
+        # We checkout the specific commit on the contract repo that we associated (tagged) with our consumer commit
+        uses: actions/checkout@v2
+        with:
+          repository: agilepathway/available-pets-consumer-contract
+          path: './contract'
+          ref: ${{ steps.set-contract-commit-output-var.outputs.contract-commit }}
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install Gauge
+        uses: getgauge/setup-gauge@master
+        with:
+          gauge-plugins: java, html-report
+
+      - name: Install Prism
+        run: npm install -g @stoplight/prism-cli
+
+      - name: Start Prism in validation proxy mode
+        working-directory: ./contract
+        run: prism proxy openapi.yaml https://ephemeral-petstore-service.herokuapp.com/v2 --errors &
+      - name: Check that the provider satisfies the contract
+        env:
+          OPENAPI_HOST: http://127.0.0.1:4010
+        working-directory: ./contract
+        run: gauge run specs
+
+      - name: Upload Gauge test report
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: gauge-html-report
+          path: contract/reports/html-report/
+
+  deploy-to-pre-production:
+    needs: can-i-deploy
     runs-on: ubuntu-20.04
     environment: pre-production
     steps:
