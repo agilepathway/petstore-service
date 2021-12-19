@@ -5,6 +5,8 @@ import uk.co.agilepathway.petstore.model.ModelApiResponse;
 import uk.co.agilepathway.petstore.model.Pet;
 import uk.co.agilepathway.petstore.model.Pet.StatusEnum;
 import io.swagger.annotations.*;
+
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -85,8 +87,14 @@ public interface PetApiDelegate {
                 .category(new Category().id(1L).name("A category"))
                 .photoUrls(Collections.<String>emptyList());
         List<Pet> pets = Collections.singletonList(doggie);
-        return new ResponseEntity<List<Pet>>(pets, HttpStatus.OK);
+        return new ResponseEntity<List<Pet>>(pets, jsonContentType(), HttpStatus.OK);
 
+    }
+
+    default HttpHeaders jsonContentType() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return httpHeaders;
     }
 
     /**
