@@ -3,12 +3,15 @@ package uk.co.agilepathway.petstore.api;
 import java.util.Map;
 import uk.co.agilepathway.petstore.model.Order;
 import io.swagger.annotations.*;
+
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,8 +49,14 @@ public interface StoreApiDelegate {
      * @see StoreApi#getInventory
      */
     default ResponseEntity<Map<String, Integer>> getInventory() {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        Map<String, Integer> inventory = Collections.singletonMap("additionalProp1", 0);
+        return new ResponseEntity<Map<String, Integer>>(inventory, jsonContentType(), HttpStatus.OK);
+    }
 
+    default HttpHeaders jsonContentType() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return httpHeaders;
     }
 
     /**
@@ -75,7 +84,8 @@ public interface StoreApiDelegate {
                 }
             }
         });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        Order order = new Order();
+        return new ResponseEntity<>(order, jsonContentType(), HttpStatus.OK);
 
     }
 
@@ -102,7 +112,8 @@ public interface StoreApiDelegate {
                 }
             }
         });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        Order order = new Order();
+        return new ResponseEntity<>(order, jsonContentType(), HttpStatus.OK);
 
     }
 

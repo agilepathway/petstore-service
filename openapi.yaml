@@ -328,7 +328,7 @@ paths:
       requestBody:
         description: order placed for purchasing the pet
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/Order'
         required: true
