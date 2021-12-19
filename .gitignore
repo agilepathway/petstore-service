@@ -12,9 +12,6 @@
 
 # ----- Portman -----
 
-# Portman output directory
-/portman/output/
-
 # Portman environment files
 /portman/.env*
 
