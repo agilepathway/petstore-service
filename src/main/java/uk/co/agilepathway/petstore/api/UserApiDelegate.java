@@ -3,6 +3,8 @@ package uk.co.agilepathway.petstore.api;
 import java.util.List;
 import uk.co.agilepathway.petstore.model.User;
 import io.swagger.annotations.*;
+
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -99,8 +101,15 @@ public interface UserApiDelegate {
                 }
             }
         });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        User user = new User().firstName("Joe").lastName("Bloggs");
+        return new ResponseEntity<>(user, jsonContentType(), HttpStatus.OK);
 
+    }
+
+    default HttpHeaders jsonContentType() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return httpHeaders;
     }
 
     /**
@@ -114,7 +123,7 @@ public interface UserApiDelegate {
      */
     default ResponseEntity<String> loginUser(String username,
         String password) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
