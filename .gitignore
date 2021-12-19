@@ -6,3 +6,17 @@
 
 # Log file
 *.log
+
+
+
+
+# ----- Portman -----
+
+# Portman output directory
+/portman/output/
+
+# Portman environment files
+/portman/.env*
+
+# Portman temporary files
+/tmp/
