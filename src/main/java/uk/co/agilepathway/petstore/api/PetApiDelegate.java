@@ -80,15 +80,21 @@ public interface PetApiDelegate {
                 }
             }
         });
-        Pet doggie = new Pet().name("doggie")
-                .status(StatusEnum.fromValue(status.get(0)))
-                .id(1L)
-                .tags(Collections.<uk.co.agilepathway.petstore.model.Tag>emptyList())
-                .category(new Category().id(1L).name("A category"))
-                .photoUrls(Collections.<String>emptyList());
-        List<Pet> pets = Collections.singletonList(doggie);
-        return new ResponseEntity<List<Pet>>(pets, jsonContentType(), HttpStatus.OK);
+        return singleDoggieResponse();
+    }
 
+    default ResponseEntity<List<Pet>> singleDoggieResponse() {
+        List<Pet> pets = Collections.singletonList(doggie());
+        return new ResponseEntity<List<Pet>>(pets, jsonContentType(), HttpStatus.OK);
+    }
+
+    default Pet doggie() {
+        return new Pet().name("doggie")
+        .status(StatusEnum.AVAILABLE)
+        .id(1L)
+        .tags(Collections.<uk.co.agilepathway.petstore.model.Tag>emptyList())
+        .category(new Category().id(1L).name("A category"))
+        .photoUrls(Collections.<String>emptyList());
     }
 
     default HttpHeaders jsonContentType() {
@@ -122,8 +128,7 @@ public interface PetApiDelegate {
                 }
             }
         });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
+        return singleDoggieResponse();
     }
 
     /**
@@ -151,7 +156,7 @@ public interface PetApiDelegate {
                 }
             }
         });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<Pet>(doggie(), jsonContentType(), HttpStatus.OK);
 
     }
 
@@ -206,7 +211,7 @@ public interface PetApiDelegate {
                 }
             }
         });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
