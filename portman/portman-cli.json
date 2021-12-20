@@ -5,5 +5,8 @@
   "portmanConfigFile": "portman/portman-config.json",
   "includeTests": true,
   "syncPostman": false,
-  "runNewman": true
+  "runNewman": true,
+  "newmanRunOptions": {
+    "reporters": ["cli", "junit"]
+  }
 }

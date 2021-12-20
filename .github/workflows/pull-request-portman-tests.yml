@@ -38,3 +38,10 @@ jobs:
       - name: Verify implementation is in sync with API
         run: |
           portman --cliOptionsFile portman/portman-cli.json -b ${{ steps.review_app_status.outputs.review_app_url }}/v2
+
+      - name: Upload Portman test report
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: portman-junit-report
+          path: newman/
