@@ -39,6 +39,13 @@ jobs:
         run: |
           portman --cliOptionsFile portman/portman-cli.json -b ${{ steps.review_app_status.outputs.review_app_url }}/v2
 
+      - name: Upload generated Postman test collection
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: postman-collection
+          path: portman/output/postman/
+
       - name: Upload Portman test report
         uses: actions/upload-artifact@v2
         if: always()
