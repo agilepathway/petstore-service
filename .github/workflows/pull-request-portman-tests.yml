@@ -1,0 +1,40 @@
+---
+
+name: Portman tests on pull request
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+    branches:
+      - master
+
+jobs:
+
+  functional-tests:
+    name: Portman tests
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v2.3.4
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install Portman
+        run: npm install -g @apideck/portman
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Verify Review App status
+        id: review_app_status
+        uses: niteoweb/reviewapps-deploy-status@v1.4.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify implementation is in sync with API
+        run: |
+          portman --cliOptionsFile portman/portman-cli.json -b ${{ steps.review_app_status.outputs.review_app_url }}/v2
