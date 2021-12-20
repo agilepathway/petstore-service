@@ -51,11 +51,11 @@ jobs:
         if: always()
         with:
           name: portman-junit-report
-          path: newman/
+          path: portman/output/newman/
 
       - name: Publish Portman test results inline
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
-          files: newman/*.xml
+          files: portman/output/newman/*.xml
           check_name: Portman Test Results
