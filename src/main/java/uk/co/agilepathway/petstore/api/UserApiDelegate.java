@@ -101,9 +101,12 @@ public interface UserApiDelegate {
                 }
             }
         });
-        User user = new User().firstName("Joe").lastName("Bloggs");
-        return new ResponseEntity<>(user, jsonContentType(), HttpStatus.OK);
+        return new ResponseEntity<>(exampleUser(), jsonContentType(), HttpStatus.OK);
+    }
 
+    default User exampleUser() {
+        return new User().firstName("Joe").lastName("Bloggs").email("joe@example.com").password("*******")
+                .phone("0780000001").userStatus(1).id(1L).username("joebloggs");
     }
 
     default HttpHeaders jsonContentType() {
@@ -126,7 +129,7 @@ public interface UserApiDelegate {
         HttpHeaders headers = jsonContentType();
         headers.add("X-Rate-Limit", "3");
         headers.add("X-Expires-After", "2022-01-30T08:30:00Z");
-        return new ResponseEntity<String>("{}", headers, HttpStatus.OK);
+        return new ResponseEntity<String>("\"success\"", headers, HttpStatus.OK);
 
     }
 

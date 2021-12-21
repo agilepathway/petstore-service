@@ -11,7 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -84,9 +87,13 @@ public interface StoreApiDelegate {
                 }
             }
         });
-        Order order = new Order();
-        return new ResponseEntity<>(order, jsonContentType(), HttpStatus.OK);
+        return new ResponseEntity<>(exampleOrder(), jsonContentType(), HttpStatus.OK);
 
+    }
+
+    default Order exampleOrder() {
+        OffsetDateTime shipDate = new Date().toInstant().atOffset(ZoneOffset.UTC);
+        return new Order().id(1L).petId(1L).shipDate(shipDate).quantity(1).status(Order.StatusEnum.PLACED);
     }
 
     /**
@@ -112,8 +119,7 @@ public interface StoreApiDelegate {
                 }
             }
         });
-        Order order = new Order();
-        return new ResponseEntity<>(order, jsonContentType(), HttpStatus.OK);
+        return new ResponseEntity<>(exampleOrder(), jsonContentType(), HttpStatus.OK);
 
     }
 
