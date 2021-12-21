@@ -211,7 +211,7 @@ public interface PetApiDelegate {
                 }
             }
         });
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(jsonContentType(), HttpStatus.OK);
 
     }
 

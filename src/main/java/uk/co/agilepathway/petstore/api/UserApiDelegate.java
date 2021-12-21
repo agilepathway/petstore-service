@@ -123,7 +123,7 @@ public interface UserApiDelegate {
      */
     default ResponseEntity<String> loginUser(String username,
         String password) {
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(jsonContentType(), HttpStatus.OK);
 
     }
 
