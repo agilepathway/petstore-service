@@ -1,6 +1,6 @@
 ---
 
-name: FTs on pull requests
+name: Pull request consumer contract tests on review app
 on:  # yamllint disable-line rule:truthy
   pull_request:
     branches:
@@ -9,7 +9,7 @@ on:  # yamllint disable-line rule:truthy
 jobs:
 
   functional-tests:
-    name: Pull request FTs
+    name: Pull request consumer contract tests
     runs-on: ubuntu-latest
 
     steps:
