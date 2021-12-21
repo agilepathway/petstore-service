@@ -20,6 +20,12 @@
                     "enabled": true,
                     "maxMs": 300
                 }
+            },
+            {
+                "openApiOperation": "*::/*",
+                "headersPresent": {
+                    "enabled": true
+                }
             }
         ]
     },
