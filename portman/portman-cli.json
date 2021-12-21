@@ -5,13 +5,5 @@
   "portmanConfigFile": "portman/portman-config.json",
   "includeTests": true,
   "syncPostman": false,
-  "runNewman": true,
-  "newmanRunOptions": {
-    "reporters": ["cli", "junit"],
-    "reporter": {
-      "junit": {
-        "export": "portman/output/newman/"
-      }
-    }
-  }
+  "runNewman": true
 }
