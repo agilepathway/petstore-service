@@ -211,7 +211,8 @@ public interface PetApiDelegate {
                 }
             }
         });
-        return new ResponseEntity<>(jsonContentType(), HttpStatus.OK);
+        ModelApiResponse responseBody = new ModelApiResponse().code(Integer.valueOf(4)).type("ok").message("magic!");
+        return new ResponseEntity<>(responseBody, jsonContentType(), HttpStatus.OK);
 
     }
 

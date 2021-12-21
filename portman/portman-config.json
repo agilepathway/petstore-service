@@ -26,6 +26,12 @@
                 "headersPresent": {
                     "enabled": true
                 }
+            },
+            {
+                "openApiOperation": "*::/*",
+                "jsonBody": {
+                    "enabled": true
+                }
             }
         ]
     },
