@@ -39,14 +39,29 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # yamllint disable rule:line-length
       - name: Verify implementation is in sync with API
         run: |
           portman \
             --cliOptionsFile portman/portman-cli.json \
             -b ${{ steps.review_app_status.outputs.review_app_url }}/v2 \
-            --newmanRunOptions '{"reporters":["cli","junit","openapi"],"reporter":{"junit":{"export":"portman/output/newman/"},"openapi":{"spec":"openapi.yaml","serverUrl":"${{ steps.review_app_status.outputs.review_app_url }}/v2","reportstyle":"tall"}}}'
-      # yamllint enable rule:line-length
+            --newmanRunOptions '
+              {
+                "reporters":[
+                  "cli",
+                  "junit",
+                  "openapi"
+                ],
+                "reporter":{
+                  "junit":{
+                    "export":"portman/output/newman/"
+                  },
+                  "openapi":{
+                    "spec":"openapi.yaml",
+                    "serverUrl":"${{ steps.review_app_status.outputs.review_app_url }}/v2",
+                    "reportstyle":"tall"
+                  }
+                }
+              }'
 
       - name: Upload generated Postman test collection
         uses: actions/upload-artifact@v2
