@@ -7,6 +7,12 @@
                 "statusSuccess": {
                     "enabled": true
                 }
+            },
+            {
+                "openApiOperation": "*::/*",
+                "contentType": {
+                    "enabled": true
+                }
             }
         ]
     },
