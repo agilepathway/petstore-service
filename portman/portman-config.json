@@ -32,6 +32,12 @@
                 "jsonBody": {
                     "enabled": true
                 }
+            },
+            {
+                "openApiOperation": "*::/*",
+                "schemaValidation": {
+                    "enabled": true
+                }
             }
         ]
     },
