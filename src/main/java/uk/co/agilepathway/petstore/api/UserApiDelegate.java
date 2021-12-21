@@ -123,7 +123,10 @@ public interface UserApiDelegate {
      */
     default ResponseEntity<String> loginUser(String username,
         String password) {
-        return new ResponseEntity<>(jsonContentType(), HttpStatus.OK);
+        HttpHeaders headers = jsonContentType();
+        headers.add("X-Rate-Limit", "3");
+        headers.add("X-Expires-After", "2022-01-30T08:30:00Z");
+        return new ResponseEntity<>(headers, HttpStatus.OK);
 
     }
 
