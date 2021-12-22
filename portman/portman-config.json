@@ -1,5 +1,12 @@
 {
     "version": 1.0,
+    "globals": {
+        "securityOverwrites": {
+            "bearer": {
+                "token": "YOUR_ACCESS_TOKEN"
+            }
+        }
+    },
     "tests": {
         "contractTests": [
             {
@@ -39,13 +46,36 @@
                     "enabled": true
                 }
             }
-        ]
-    },
-    "globals": {
-        "securityOverwrites": {
-            "bearer": {
-                "token": "YOUR_ACCESS_TOKEN"
+        ],
+        "variationTests": [
+            {
+                "openApiOperationId": "updatePet",
+                "openApiResponse": "400",
+                "variations": [
+                    {
+                        "name": "missingParams",
+                        "overwrites": [
+                            {
+                                "overwriteRequestBody": [
+                                    {
+                                        "key": "name",
+                                        "remove": true
+                                    }
+                                ]
+                            }
+                        ],
+                        "tests": {
+                            "contractTests": [
+                                {
+                                    "statusCode": {
+                                        "enabled": true
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
             }
-        }
+        ]
     }
 }
