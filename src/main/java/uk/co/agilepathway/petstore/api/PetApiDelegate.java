@@ -170,6 +170,9 @@ public interface PetApiDelegate {
      * @see PetApi#updatePet
      */
     default ResponseEntity<Void> updatePet(Pet body) {
+        if ((body.getName() == null) || (body.getName().trim().isEmpty())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
