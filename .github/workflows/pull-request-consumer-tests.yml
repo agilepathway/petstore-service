@@ -14,11 +14,20 @@ jobs:
 
     steps:
 
-      - name: Set up Java
-        uses: actions/setup-java@v2
+      - name: Check out contract repo
+        uses: actions/checkout@v2
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          repository: agilepathway/available-pets-consumer-contract
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Install Prism
         run: npm install -g @stoplight/prism-cli
@@ -27,18 +36,13 @@ jobs:
         uses: getgauge/setup-gauge@master
         with:
           gauge-version: master
-          gauge-plugins: js, html-report, screenshot
+          gauge-plugins: python, html-report, screenshot
 
       - name: Verify Review App status
         id: review_app_status
         uses: niteoweb/reviewapps-deploy-status@v1.4.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Check out contract repo
-        uses: actions/checkout@v2
-        with:
-          repository: agilepathway/available-pets-consumer-contract
 
       - name: Start Prism in validation proxy mode
         run: prism proxy openapi.yaml ${{ steps.review_app_status.outputs.review_app_url }}/v2 --errors &
