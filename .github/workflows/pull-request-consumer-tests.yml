@@ -56,6 +56,8 @@ jobs:
         # It is not sufficient to just run the specs using Prism as a validation proxy, as Prism does not error
         # when the server returns a 501 not implemented response (see https://github.com/stoplightio/prism/issues/1963)
         env:
+          # Env var is temporary workaround for https://github.com/getgauge/gauge-python/issues/256
+          PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION: python
           OPENAPI_HOST: ${{ steps.review_app_status.outputs.review_app_url }}/v2
         run: gauge run specs
 
