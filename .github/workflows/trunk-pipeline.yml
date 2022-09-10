@@ -99,6 +99,8 @@ jobs:
         run: prism proxy openapi.yaml https://ephemeral-petstore-service2.herokuapp.com/v2 --errors &
       - name: Check that the provider satisfies the contract
         env:
+          # Env var is temporary workaround for https://github.com/getgauge/gauge-python/issues/256
+          PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION: python
           OPENAPI_HOST: http://127.0.0.1:4010
         working-directory: ./contract
         run: gauge run specs
